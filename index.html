@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Data Analytics Bootcamp Checklist</title>
+<style>
+  :root{
+    --bg:#0d1117;
+    --card:#151b23;
+    --card-border:#2a323c;
+    --group-bg:#10151c;
+    --ink:#e6edf3;
+    --ink-dim:#9aa4b2;
+    --ink-faint:#6b7583;
+    --master:#34d399;
+    --master-dim:#0f3d30;
+    --practice:#fbbf24;
+    --practice-dim:#4a3a0a;
+    --exposure:#94a3b8;
+    --exposure-dim:#2a3441;
+    --custom:#a78bfa;
+    --custom-dim:#332a5c;
+    --danger:#e24b4a;
+    --track:#1c232c;
+    --mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);padding:32px 16px 80px;}
+  .wrap{max-width:780px;margin:0 auto;}
+  header{margin-bottom:28px;}
+  .eyebrow{font-family:var(--mono);font-size:12px;color:var(--ink-faint);letter-spacing:0.08em;text-transform:uppercase;margin:0 0 6px;}
+  h1{font-size:22px;font-weight:600;margin:0 0 16px;letter-spacing:-0.01em;}
+  .overall-card{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:16px 18px;}
+  .overall-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;font-family:var(--mono);}
+  .overall-top .label{font-size:12px;color:var(--ink-dim);}
+  .overall-top .count{font-size:13px;color:var(--ink);}
+  .bar-track{height:8px;background:var(--track);border-radius:4px;overflow:hidden;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,#34d399,#4fd1c5);border-radius:4px;width:0%;transition:width 0.3s ease;}
+  .legend{display:flex;gap:14px;margin-top:14px;flex-wrap:wrap;}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-dim);font-family:var(--mono);}
+  .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .dot.master{background:var(--master);} .dot.practice{background:var(--practice);}
+  .dot.exposure{background:var(--exposure);} .dot.custom{background:var(--custom);}
+
+  .section{background:var(--card);border:1px solid var(--card-border);border-radius:10px;margin-top:16px;overflow:hidden;}
+  .section-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;gap:10px;flex-wrap:wrap;}
+  .section-head-left{display:flex;align-items:center;gap:10px;min-width:0;cursor:pointer;flex:1;}
+  .chevron{font-size:11px;color:var(--ink-faint);transition:transform 0.2s ease;flex-shrink:0;}
+  .section.collapsed .chevron{transform:rotate(-90deg);}
+  .section-title{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .tier-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.05em;padding:2px 7px;border-radius:4px;flex-shrink:0;text-transform:uppercase;}
+  .tier-tag.master{background:var(--master-dim);color:var(--master);}
+  .tier-tag.practice{background:var(--practice-dim);color:var(--practice);}
+  .tier-tag.exposure{background:var(--exposure-dim);color:var(--exposure);}
+  .tier-tag.custom{background:var(--custom-dim);color:var(--custom);}
+  .section-head-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+  .mini-track{width:56px;height:5px;background:var(--track);border-radius:3px;overflow:hidden;}
+  .mini-fill{height:100%;border-radius:3px;transition:width 0.3s ease;}
+  .section-count{font-family:var(--mono);font-size:12px;color:var(--ink-faint);min-width:36px;text-align:right;}
+  .icon-btn{background:none;border:1px solid var(--card-border);color:var(--ink-faint);border-radius:6px;width:26px;height:26px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .icon-btn:hover{color:var(--ink);border-color:var(--ink-faint);}
+  .icon-btn.danger:hover{color:var(--danger);border-color:var(--danger);}
+  .deadline-badge{font-family:var(--mono);font-size:10.5px;padding:2px 7px;border-radius:4px;white-space:nowrap;flex-shrink:0;}
+  .deadline-badge.ok{background:#0f3d30;color:#34d399;}
+  .deadline-badge.soon{background:#4a3a0a;color:#fbbf24;}
+  .deadline-badge.over{background:#4a1414;color:#e24b4a;}
+
+  .groups{border-top:1px solid var(--card-border);}
+  .section.collapsed .groups{display:none;}
+  .group{border-bottom:1px solid var(--card-border);}
+  .group:last-child{border-bottom:none;}
+  .group-head{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;gap:10px;flex-wrap:wrap;background:var(--group-bg);cursor:pointer;}
+  .group-head-left{display:flex;align-items:center;gap:8px;min-width:0;flex:1;}
+  .group-chevron{font-size:10px;color:var(--ink-faint);transition:transform 0.2s ease;flex-shrink:0;}
+  .group.collapsed .group-chevron{transform:rotate(-90deg);}
+  .group-title{font-size:13px;font-weight:600;color:var(--ink-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .group.custom-group .group-title{color:var(--custom);}
+  .group-head-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+  .group-items{padding:4px 10px 8px;}
+  .group.collapsed .group-items{display:none;}
+  .group.collapsed .deadline-form{display:none;}
+
+  .deadline-form{display:none;align-items:center;gap:8px;padding:10px 18px;border-top:1px solid var(--card-border);background:var(--group-bg);}
+  .deadline-form.open{display:flex;flex-wrap:wrap;}
+  .deadline-form input[type="date"]{background:var(--track);border:1px solid var(--card-border);color:var(--ink);border-radius:6px;padding:5px 8px;font-family:var(--mono);font-size:12px;}
+  .deadline-form .small-btn{font-family:var(--mono);font-size:11px;background:none;border:1px solid var(--card-border);color:var(--ink-dim);border-radius:6px;padding:5px 10px;cursor:pointer;}
+  .deadline-form .small-btn:hover{color:var(--ink);}
+  .deadline-form .small-btn.clear:hover{color:var(--danger);border-color:var(--danger);}
+  .deadline-form label{font-size:11px;color:var(--ink-faint);font-family:var(--mono);}
+
+  .item{display:flex;align-items:flex-start;gap:10px;padding:7px 10px;border-radius:6px;cursor:pointer;}
+  .item:hover{background:#1b222b;}
+  .item input{margin-top:2px;width:16px;height:16px;accent-color:#34d399;flex-shrink:0;cursor:pointer;}
+  .item label{font-size:13.5px;line-height:1.45;color:var(--ink);cursor:pointer;}
+  .item.done label{color:var(--ink-faint);text-decoration:line-through;}
+  .item .code{font-family:var(--mono);font-size:12.5px;background:#1c232c;padding:1px 5px;border-radius:4px;color:#8ecdb7;}
+  .item.done .code{color:var(--ink-faint);background:#181e26;}
+
+  .add-item-row{display:flex;gap:8px;padding:6px 10px 6px;}
+  .add-item-row input[type="text"]{flex:1;background:var(--track);border:1px solid var(--card-border);color:var(--ink);border-radius:6px;padding:7px 10px;font-size:12.5px;font-family:var(--sans);}
+  .add-item-row input[type="text"]:focus{outline:none;border-color:var(--ink-faint);}
+  .add-item-row button{font-family:var(--mono);font-size:11.5px;background:none;border:1px solid var(--card-border);color:var(--ink-dim);border-radius:6px;padding:0 12px;cursor:pointer;}
+  .add-item-row button:hover{color:var(--ink);}
+
+  .add-group-row{padding:8px 18px 12px;background:var(--group-bg);}
+  .add-group-trigger{background:none;border:none;color:var(--ink-faint);font-family:var(--mono);font-size:12px;cursor:pointer;padding:0;}
+  .add-group-trigger:hover{color:var(--ink-dim);}
+  .add-group-form{display:none;flex-direction:column;gap:8px;margin-top:8px;}
+  .add-group-form.open{display:flex;}
+  .add-group-form input[type="text"]{background:var(--track);border:1px solid var(--card-border);color:var(--ink);border-radius:6px;padding:7px 10px;font-size:12.5px;font-family:var(--sans);}
+  .add-group-form-row2{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .add-group-form-row2 label{font-size:11px;color:var(--ink-faint);font-family:var(--mono);}
+  .add-group-form-row2 input[type="date"]{background:var(--track);border:1px solid var(--card-border);color:var(--ink);border-radius:6px;padding:5px 8px;font-family:var(--mono);font-size:11.5px;}
+  .add-group-form-row2 .spacer{flex:1;}
+  .add-group-form-row2 button{font-family:var(--mono);font-size:11.5px;border-radius:6px;padding:6px 12px;cursor:pointer;}
+  .btn-create{background:var(--master-dim);border:1px solid var(--master);color:var(--master);}
+  .btn-cancel{background:none;border:1px solid var(--card-border);color:var(--ink-dim);}
+  .btn-cancel:hover{color:var(--ink);}
+
+  .add-section-card{background:var(--card);border:1px dashed var(--card-border);border-radius:10px;margin-top:16px;padding:14px 18px;}
+  .add-section-trigger{background:none;border:none;color:var(--ink-dim);font-family:var(--mono);font-size:13px;cursor:pointer;width:100%;text-align:left;padding:0;}
+  .add-section-trigger:hover{color:var(--ink);}
+  .add-section-form{display:none;flex-direction:column;gap:10px;}
+  .add-section-form.open{display:flex;}
+  .add-section-form input[type="text"]{background:var(--track);border:1px solid var(--card-border);color:var(--ink);border-radius:6px;padding:9px 10px;font-size:13.5px;font-family:var(--sans);}
+  .add-section-row2{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .add-section-row2 button{font-family:var(--mono);font-size:12px;border-radius:6px;padding:7px 14px;cursor:pointer;}
+
+  .reset-row{text-align:center;margin-top:24px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+  .reset-btn{font-family:var(--mono);font-size:12px;color:var(--ink-faint);background:none;border:1px solid var(--card-border);border-radius:6px;padding:8px 14px;cursor:pointer;}
+  .reset-btn:hover{color:#e24b4a;border-color:#e24b4a;}
+  .publish-card{background:var(--card);border:1px solid var(--card-border);border-radius:10px;margin-top:16px;padding:14px 18px;}
+  .publish-card .p-title{font-family:var(--mono);font-size:12px;color:var(--ink-dim);margin:0 0 10px;text-transform:uppercase;letter-spacing:0.05em;}
+  .publish-card .p-note{font-size:12px;color:var(--ink-faint);margin:8px 0 0;line-height:1.5;}
+  .publish-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .publish-btn{font-family:var(--mono);font-size:12px;border-radius:6px;padding:8px 14px;cursor:pointer;border:1px solid var(--card-border);background:none;color:var(--ink-dim);}
+  .publish-btn:hover{color:var(--ink);border-color:var(--ink-faint);}
+  .publish-btn.primary{background:var(--master-dim);border:1px solid var(--master);color:var(--master);}
+  #import-file-input{display:none;}
+  .sync-banner{background:var(--custom-dim);border:1px solid var(--custom);color:var(--custom);font-family:var(--mono);font-size:12px;padding:10px 14px;border-radius:8px;margin-bottom:16px;display:none;}
+  .sync-banner.show{display:block;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">progress tracker</p>
+    <h1>Data Analytics Bootcamp Checklist</h1>
+    <div class="overall-card">
+      <div class="overall-top">
+        <span class="label">overall progress</span>
+        <span class="count" id="overall-count">0 / 0</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="overall-fill"></div></div>
+      <div class="legend">
+        <span class="legend-item"><span class="dot master"></span>master</span>
+        <span class="legend-item"><span class="dot practice"></span>practice</span>
+        <span class="legend-item"><span class="dot exposure"></span>exposure</span>
+        <span class="legend-item"><span class="dot custom"></span>custom</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="sync-banner" id="sync-banner"></div>
+
+  <div id="sections"></div>
+
+  <div class="add-section-card">
+    <button class="add-section-trigger" id="add-section-trigger">+ add a custom section</button>
+    <div class="add-section-form" id="add-section-form">
+      <input type="text" id="new-section-title" placeholder="Section name, e.g. Portfolio polish">
+      <div class="add-section-row2">
+        <div class="spacer"></div>
+        <button class="btn-cancel" id="cancel-section-btn">Cancel</button>
+        <button class="btn-create" id="create-section-btn">Create section</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="publish-card">
+    <p class="p-title">share progress on github</p>
+    <div class="publish-row">
+      <button class="publish-btn primary" id="export-btn">&#8681; Export progress.json</button>
+      <button class="publish-btn" id="import-btn">&#8679; Import a progress.json</button>
+      <input type="file" id="import-file-input" accept="application/json">
+    </div>
+    <p class="p-note">Export downloads a small file with your current checkmarks, deadlines, and custom sections. Add/replace it as <code>progress.json</code> next to <code>index.html</code> in your GitHub repo and push. Anyone who opens your hosted link without their own saved progress (a friend, a new device) will automatically load that published snapshot instead of seeing a blank checklist.</p>
+  </div>
+
+  <div class="reset-row">
+    <button class="reset-btn" id="reset-btn">reset all progress</button>
+  </div>
+</div>
+
+<script>
+const FIXED_DATA = [
+  { id:"sql", title:"SQL (MySQL)", tier:"master", groups:[
+    { id:"basics", title:"Basics", items:[
+      "Install MySQL & create a database", {code:"SELECT"}, {code:"FROM"}, {code:"WHERE"},
+      {code:"GROUP BY"}, {code:"ORDER BY"}, {code:"HAVING"}, {code:"LIMIT"}, "Table aliasing"
+    ]},
+    { id:"joins", title:"Joins & Set Operations", items:[
+      {code:"INNER JOIN"}, {code:"LEFT JOIN"}, {code:"RIGHT JOIN"}, "Self join",
+      "Multi-table joins", {code:"UNION / UNION ALL"}
+    ]},
+    { id:"functions", title:"Functions & Subqueries", items:[
+      "String functions (LENGTH, UPPER/LOWER, TRIM, SUBSTRING, REPLACE, CONCAT)",
+      "CASE statements", "Subqueries in WHERE / SELECT / FROM"
+    ]},
+    { id:"cte-window", title:"CTEs & Window Functions", items:[
+      "PARTITION BY window functions", "ROW_NUMBER / RANK / DENSE_RANK",
+      "CTEs (Common Table Expressions)", "Temporary tables"
+    ]},
+    { id:"advanced", title:"Advanced (exposure)", items:[
+      "Stored procedures", "Triggers & events"
+    ]},
+    { id:"projects", title:"Projects", items:[
+      "Project 1: Data cleaning in MySQL", "Project 2: EDA in MySQL",
+      "80-100 SQL practice questions completed"
+    ]}
+  ]},
+  { id:"excel", title:"Microsoft Excel", tier:"master", groups:[
+    { id:"fundamentals", title:"Fundamentals", items:[
+      "Excel tables, sorting & filtering"
+    ]},
+    { id:"formulas", title:"Formulas", items:[
+      "MAX/MIN, IF/IFS", {code:"LEN, LEFT, RIGHT, TEXT, TRIM"},
+      {code:"CONCATENATE, SUBSTITUTE"}, {code:"SUMIF, COUNTIF, NETWORKDAYS"},
+      "XLOOKUP vs VLOOKUP", {code:"INDEX/MATCH"}
+    ]},
+    { id:"analysis", title:"Analysis & Visualization", items:[
+      "Pivot tables", "Conditional formatting", "Data validation", "Charts & visualizations"
+    ]},
+    { id:"projects", title:"Projects", items:[
+      "Project 3: Cleaning data in Excel", "Project 4: Sales dashboard"
+    ]}
+  ]},
+  { id:"tableau", title:"Tableau", tier:"exposure", groups:[
+    { id:"setup-visuals", title:"Setup & Visuals", items:[
+      "Install Tableau Public & import data", "Bins & calculated fields",
+      "Bar/line combo, density maps, pie charts", "Joins & relationships"
+    ]},
+    { id:"projects", title:"Project", items:[
+      "Project 5: Airbnb dashboard"
+    ]}
+  ]},
+  { id:"powerbi", title:"Power BI", tier:"master", groups:[
+    { id:"query-model", title:"Power Query & Modeling", items:[
+      "Install & import data", "Power Query basics (transform data)",
+      "Data modeling: relationships, star schema"
+    ]},
+    { id:"dax", title:"DAX", items:[
+      "DAX measures", "SUM vs SUMX", "Date functions", "CALCULATE, FILTER, DIVIDE"
+    ]},
+    { id:"visuals", title:"Visuals", items:[
+      "Drill down in visualizations", "Conditional formatting", "Bins & lists", "Exploring visualization types"
+    ]},
+    { id:"projects", title:"Project", items:[
+      "Project 6: Survey dashboard (KPI cards, trend, region, filters)"
+    ]}
+  ]},
+  { id:"python", title:"Python", tier:"master", groups:[
+    { id:"fundamentals", title:"Fundamentals", items:[
+      "Install Anaconda & Jupyter Notebooks", "Variables & naming conventions",
+      "Data types (numeric, boolean, strings, lists, tuples, sets, dicts)",
+      "Comparison, logical & membership operators", "IF / ELSE", "FOR loops", "WHILE loops",
+      "Creating & using functions", "Converting data types"
+    ]},
+    { id:"mini-projects", title:"Mini Projects", items:[
+      "Project 7: BMI calculator", "Project 8: Automatic file sorter (OS module)"
+    ]},
+    { id:"scraping", title:"Web Scraping", items:[
+      "Web scraping & HTML basics", "BeautifulSoup & Requests", {code:"find / find_all"},
+      "Project 9: Wikipedia table scraper"
+    ]}
+  ]},
+  { id:"pandas", title:"Pandas", tier:"master", groups:[
+    { id:"core", title:"Core DataFrame Operations", items:[
+      "Reading files (CSV, text, JSON, Excel)", "Filtering & ordering DataFrames",
+      "Indexing & multi-indexing", "Group by & aggregation",
+      "Merging, joining & concatenating DataFrames"
+    ]},
+    { id:"viz-clean", title:"Visualization & Cleaning", items:[
+      "Data visualization with Pandas (plots, histograms, boxplots)",
+      "Cleaning data (nulls, text standardizing, regex)",
+      "Exploratory data analysis with Pandas"
+    ]},
+    { id:"projects", title:"Projects", items:[
+      "Project 10: Amazon price tracker", "Project 11: Crypto API data extraction"
+    ]}
+  ]},
+  { id:"azure", title:"Azure", tier:"exposure", groups:[
+    { id:"overview", title:"Overview", items:[
+      "Account setup & UI walkthrough", "Blob storage accounts",
+      "SQL databases & Azure Data Studio", "Data Factory (ETL pipelines)", "Synapse Analytics"
+    ]}
+  ]},
+  { id:"aws", title:"AWS", tier:"master", groups:[
+    { id:"setup-storage", title:"Setup & Storage", items:[
+      "Account setup & UI walkthrough", "S3 buckets - upload & organize CSV datasets"
+    ]},
+    { id:"query-etl", title:"Querying & ETL", items:[
+      "Amazon Athena (SQL queries on S3)", "Glue & Glue DataBrew (ETL)"
+    ]},
+    { id:"viz-project", title:"Visualization & Project", items:[
+      "QuickSight (visualization)", "Mini project: CSV to S3 to Athena to dashboard"
+    ]}
+  ]},
+  { id:"databricks", title:"Databricks", tier:"exposure", groups:[
+    { id:"overview", title:"Overview", items:[
+      "UI walkthrough & setup", "Data ingestion (S3 & Google Drive)",
+      "SQL editor & notebooks", "AI assistant (Genie)", "Bronze / Silver / Gold ETL concept",
+      "Project 12: EPA emissions dashboard"
+    ]}
+  ]},
+  { id:"git", title:"Git & GitHub", tier:"master", groups:[
+    { id:"fundamentals", title:"Fundamentals", items:[
+      {code:"git init / status / add / commit / log"}, {code:"git branch / switch / merge"},
+      {code:"git pull / push"}, "Understand .gitignore"
+    ]},
+    { id:"repos", title:"Repos & READMEs", items:[
+      "Repo created: SQL project", "Repo created: Excel project", "Repo created: Power BI project",
+      "Repo created: Python/Pandas project", "Repo created: AWS project", "Every repo has a clear README"
+    ]}
+  ]},
+  { id:"stats", title:"Statistics Fundamentals", tier:"master", groups:[
+    { id:"core", title:"Core Concepts", items:[
+      "Mean, median, mode, standard deviation, variance", "Correlation vs. causation",
+      "Distributions, skew, outliers", "Sampling & sample size basics",
+      "p-values & confidence intervals (conceptual)", "A/B testing basics"
+    ]}
+  ]},
+  { id:"jobready", title:"Job Readiness", tier:"master", groups:[
+    { id:"prep", title:"Prep", items:[
+      "Resume rewritten (action + method + result bullets)",
+      "LinkedIn headline & About updated with keywords",
+      "Business-case summary written for each flagship project",
+      "Practiced explaining each project in under 2 minutes",
+      "SQL / case-study interview practice sessions",
+      "5-7 STAR behavioral stories prepared",
+      "At least one mock interview completed"
+    ]}
+  ]}
+];
+
+const KEYS = {
+  checked: "checklist-progress-v2",
+  extraItems: "checklist-extra-items-v2",
+  customSections: "checklist-custom-sections-v2",
+  customGroups: "checklist-custom-groups-v2",
+  deadlines: "checklist-deadlines-v2",
+  collapsedGroups: "checklist-collapsed-groups-v2"
+};
+
+let checked = {};
+let extraItems = {};
+let customSections = [];
+let customGroups = [];
+let deadlines = {};
+let openDeadlineFor = null;
+let collapsedGroups = {};
+
+function safeGet(key, fallback){
+  try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; }
+  catch(e){ return fallback; }
+}
+function safeSet(key, value){
+  try{ localStorage.setItem(key, JSON.stringify(value)); }
+  catch(e){ alert("Couldn't save progress in this browser. Avoid private/incognito mode and make sure local storage isn't blocked."); }
+}
+
+function loadAll(){
+  checked = safeGet(KEYS.checked, {});
+  extraItems = safeGet(KEYS.extraItems, {});
+  customSections = safeGet(KEYS.customSections, []);
+  customGroups = safeGet(KEYS.customGroups, []);
+  deadlines = safeGet(KEYS.deadlines, {});
+  collapsedGroups = safeGet(KEYS.collapsedGroups, {});
+}
+
+function groupKey(sectionId, groupId){ return sectionId + "::" + groupId; }
+
+function getAllSections(){
+  const fixed = FIXED_DATA.map(s => {
+    const groups = s.groups.map(g => {
+      const items = g.items.slice();
+      const gk = groupKey(s.id, g.id);
+      if (extraItems[gk] && extraItems[gk].length) extraItems[gk].forEach(t => items.push(t));
+      return { id:g.id, title:g.title, items, isCustom:false, sectionId:s.id };
+    });
+    const extraGroups = customGroups.filter(cg => cg.sectionId === s.id)
+      .map(cg => ({ id:cg.id, title:cg.title, items:cg.items, isCustom:true, sectionId:s.id }));
+    return { id:s.id, title:s.title, tier:s.tier, isCustom:false, groups: groups.concat(extraGroups) };
+  });
+  const custom = customSections.map(cs => {
+    const groups = customGroups.filter(cg => cg.sectionId === cs.id)
+      .map(cg => ({ id:cg.id, title:cg.title, items:cg.items, isCustom:true, sectionId:cs.id }));
+    return { id:cs.id, title:cs.title, tier:"custom", isCustom:true, groups };
+  });
+  return fixed.concat(custom);
+}
+
+function tierColor(tier){
+  if (tier === "master") return "var(--master)";
+  if (tier === "practice") return "var(--practice)";
+  if (tier === "custom") return "var(--custom)";
+  return "var(--exposure)";
+}
+
+function formatDeadline(dateStr){
+  if (!dateStr) return null;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const d = new Date(dateStr + "T00:00:00");
+  const diffDays = Math.round((d - today) / 86400000);
+  const dateLabel = d.toLocaleDateString(undefined, { month:"short", day:"numeric" });
+  if (diffDays < 0) return { text: `overdue ${Math.abs(diffDays)}d`, cls:"over" };
+  if (diffDays === 0) return { text: "due today", cls:"soon" };
+  if (diffDays <= 7) return { text: `${diffDays}d left`, cls:"soon" };
+  return { text: dateLabel, cls:"ok" };
+}
+
+function render(){
+  const container = document.getElementById("sections");
+  container.innerHTML = "";
+  const allSections = getAllSections();
+
+  allSections.forEach(section => {
+    const secDiv = document.createElement("div");
+    secDiv.className = "section";
+    secDiv.dataset.id = section.id;
+
+    let secDone = 0, secTotal = 0;
+    section.groups.forEach(g => {
+      secTotal += g.items.length;
+      g.items.forEach((_, idx) => { if (checked[groupKey(section.id,g.id) + "::" + idx]) secDone++; });
+    });
+    const secPct = secTotal ? (secDone/secTotal*100) : 0;
+
+    const head = document.createElement("div");
+    head.className = "section-head";
+    head.innerHTML = `
+      <div class="section-head-left" data-toggle="collapse">
+        <span class="chevron">&#9660;</span>
+        <span class="section-title">${section.title}</span>
+        <span class="tier-tag ${section.tier}">${section.tier}</span>
+      </div>
+      <div class="section-head-right">
+        <div class="mini-track"><div class="mini-fill" style="width:${secPct.toFixed(0)}%;background:${tierColor(section.tier)}"></div></div>
+        <span class="section-count">${secDone}/${secTotal}</span>
+        ${section.isCustom ? `<button class="icon-btn danger" data-action="delete-section" title="Delete section">&times;</button>` : ``}
+      </div>
+    `;
+    head.querySelector('[data-toggle="collapse"]').addEventListener("click", () => secDiv.classList.toggle("collapsed"));
+    if (section.isCustom){
+      head.querySelector('[data-action="delete-section"]').addEventListener("click", () => {
+        if (!confirm(`Delete "${section.title}" and all its subsections?`)) return;
+        customSections = customSections.filter(s => s.id !== section.id);
+        customGroups = customGroups.filter(g => g.sectionId !== section.id);
+        Object.keys(checked).forEach(k => { if (k.startsWith(section.id + "::")) delete checked[k]; });
+        Object.keys(deadlines).forEach(k => { if (k.startsWith(section.id + "::")) delete deadlines[k]; });
+        safeSet(KEYS.customSections, customSections);
+        safeSet(KEYS.customGroups, customGroups);
+        safeSet(KEYS.checked, checked);
+        safeSet(KEYS.deadlines, deadlines);
+        render();
+      });
+    }
+
+    const groupsDiv = document.createElement("div");
+    groupsDiv.className = "groups";
+
+    section.groups.forEach(g => {
+      const gk = groupKey(section.id, g.id);
+      const groupDiv = document.createElement("div");
+      groupDiv.className = "group" + (g.isCustom ? " custom-group" : "") + (collapsedGroups[gk] ? " collapsed" : "");
+
+      const doneCount = g.items.filter((_, idx) => checked[gk + "::" + idx]).length;
+      const total = g.items.length;
+      const pct = total ? (doneCount/total*100) : 0;
+      const deadlineInfo = formatDeadline(deadlines[gk]);
+
+      const gHead = document.createElement("div");
+      gHead.className = "group-head";
+      gHead.innerHTML = `
+        <div class="group-head-left" data-toggle="collapse-group">
+          <span class="group-chevron">&#9660;</span>
+          <span class="group-title">${g.title}</span>
+          ${deadlineInfo ? `<span class="deadline-badge ${deadlineInfo.cls}">${deadlineInfo.text}</span>` : ``}
+        </div>
+        <div class="group-head-right">
+          <div class="mini-track"><div class="mini-fill" style="width:${pct.toFixed(0)}%;background:${tierColor(section.tier)}"></div></div>
+          <span class="section-count">${doneCount}/${total}</span>
+          <button class="icon-btn" data-action="toggle-deadline" title="Set deadline">&#128197;</button>
+          ${g.isCustom ? `<button class="icon-btn danger" data-action="delete-group" title="Delete subsection">&times;</button>` : ``}
+        </div>
+      `;
+      gHead.querySelector('[data-toggle="collapse-group"]').addEventListener("click", () => {
+        collapsedGroups[gk] = !collapsedGroups[gk];
+        safeSet(KEYS.collapsedGroups, collapsedGroups);
+        render();
+      });
+      gHead.querySelector('[data-action="toggle-deadline"]').addEventListener("click", () => {
+        openDeadlineFor = (openDeadlineFor === gk) ? null : gk;
+        render();
+      });
+      if (g.isCustom){
+        gHead.querySelector('[data-action="delete-group"]').addEventListener("click", () => {
+          if (!confirm(`Delete subsection "${g.title}"?`)) return;
+          customGroups = customGroups.filter(cg => cg.id !== g.id);
+          Object.keys(checked).forEach(k => { if (k.startsWith(gk + "::")) delete checked[k]; });
+          delete deadlines[gk];
+          safeSet(KEYS.customGroups, customGroups);
+          safeSet(KEYS.checked, checked);
+          safeSet(KEYS.deadlines, deadlines);
+          render();
+        });
+      }
+
+      const dForm = document.createElement("div");
+      dForm.className = "deadline-form" + (openDeadlineFor === gk ? " open" : "");
+      dForm.innerHTML = `
+        <label>Deadline for "${g.title}"</label>
+        <input type="date" value="${deadlines[gk] || ""}">
+        <button class="small-btn save">Save</button>
+        <button class="small-btn clear">Clear</button>
+      `;
+      dForm.querySelector(".save").addEventListener("click", () => {
+        const val = dForm.querySelector("input[type=date]").value;
+        if (val) deadlines[gk] = val; else delete deadlines[gk];
+        safeSet(KEYS.deadlines, deadlines);
+        openDeadlineFor = null;
+        render();
+      });
+      dForm.querySelector(".clear").addEventListener("click", () => {
+        delete deadlines[gk];
+        safeSet(KEYS.deadlines, deadlines);
+        openDeadlineFor = null;
+        render();
+      });
+
+      const itemsDiv = document.createElement("div");
+      itemsDiv.className = "group-items";
+
+      g.items.forEach((raw, idx) => {
+        const key = gk + "::" + idx;
+        const isDone = !!checked[key];
+        const row = document.createElement("div");
+        row.className = "item" + (isDone ? " done" : "");
+        let label = raw;
+        if (typeof raw === "object" && raw !== null && "code" in raw) label = `<span class="code">${raw.code}</span>`;
+        row.innerHTML = `<input type="checkbox" id="${key}" ${isDone ? "checked" : ""}><label for="${key}">${label}</label>`;
+        const cb = row.querySelector("input");
+        cb.addEventListener("click", (e) => e.stopPropagation());
+        cb.addEventListener("change", () => {
+          checked[key] = cb.checked;
+          row.classList.toggle("done", cb.checked);
+          safeSet(KEYS.checked, checked);
+          updateCounts();
+        });
+        row.addEventListener("click", (e) => {
+          if (e.target !== cb){ cb.checked = !cb.checked; cb.dispatchEvent(new Event("change")); }
+        });
+        itemsDiv.appendChild(row);
+      });
+
+      const addRow = document.createElement("div");
+      addRow.className = "add-item-row";
+      addRow.innerHTML = `<input type="text" placeholder="Add an item to ${g.title}"><button>Add</button>`;
+      const addInput = addRow.querySelector("input");
+      const addBtn = addRow.querySelector("button");
+      function submitAdd(){
+        const text = addInput.value.trim();
+        if (!text) return;
+        if (g.isCustom){
+          const target = customGroups.find(cg => cg.id === g.id);
+          target.items.push(text);
+          safeSet(KEYS.customGroups, customGroups);
+        } else {
+          if (!extraItems[gk]) extraItems[gk] = [];
+          extraItems[gk].push(text);
+          safeSet(KEYS.extraItems, extraItems);
+        }
+        addInput.value = "";
+        render();
+      }
+      addBtn.addEventListener("click", submitAdd);
+      addInput.addEventListener("keydown", (e) => { if (e.key === "Enter") submitAdd(); });
+      itemsDiv.appendChild(addRow);
+
+      groupDiv.appendChild(gHead);
+      groupDiv.appendChild(dForm);
+      groupDiv.appendChild(itemsDiv);
+      groupsDiv.appendChild(groupDiv);
+    });
+
+    const addGroupRow = document.createElement("div");
+    addGroupRow.className = "add-group-row";
+    addGroupRow.innerHTML = `
+      <button class="add-group-trigger">+ add a subsection to "${section.title}"</button>
+      <div class="add-group-form">
+        <input type="text" class="new-group-title" placeholder="Subsection name, e.g. CTEs and Window Functions">
+        <div class="add-group-form-row2">
+          <label>Deadline</label>
+          <input type="date" class="new-group-date">
+          <div class="spacer"></div>
+          <button class="btn-cancel cancel-group-btn">Cancel</button>
+          <button class="btn-create create-group-btn">Add subsection</button>
+        </div>
+      </div>
+    `;
+    const gTrigger = addGroupRow.querySelector(".add-group-trigger");
+    const gForm = addGroupRow.querySelector(".add-group-form");
+    gTrigger.addEventListener("click", () => {
+      gForm.classList.toggle("open");
+      gTrigger.style.display = gForm.classList.contains("open") ? "none" : "block";
+    });
+    addGroupRow.querySelector(".cancel-group-btn").addEventListener("click", () => {
+      gForm.classList.remove("open");
+      gTrigger.style.display = "block";
+    });
+    addGroupRow.querySelector(".create-group-btn").addEventListener("click", () => {
+      const titleInput = addGroupRow.querySelector(".new-group-title");
+      const dateInput = addGroupRow.querySelector(".new-group-date");
+      const title = titleInput.value.trim();
+      if (!title){ titleInput.focus(); return; }
+      const id = "g-" + Date.now();
+      customGroups.push({ id, sectionId: section.id, title, items: [] });
+      safeSet(KEYS.customGroups, customGroups);
+      if (dateInput.value){
+        deadlines[groupKey(section.id, id)] = dateInput.value;
+        safeSet(KEYS.deadlines, deadlines);
+      }
+      render();
+    });
+
+    secDiv.appendChild(head);
+    secDiv.appendChild(groupsDiv);
+    secDiv.appendChild(addGroupRow);
+    container.appendChild(secDiv);
+  });
+
+  updateCounts();
+}
+
+function updateCounts(){
+  let totalDone = 0, totalItems = 0;
+  const allSections = getAllSections();
+  allSections.forEach(section => {
+    section.groups.forEach(g => {
+      const gk = groupKey(section.id, g.id);
+      g.items.forEach((_, idx) => {
+        totalItems++;
+        if (checked[gk + "::" + idx]) totalDone++;
+      });
+    });
+  });
+  document.getElementById("overall-count").textContent = `${totalDone} / ${totalItems}`;
+  document.getElementById("overall-fill").style.width = (totalItems ? (totalDone/totalItems*100) : 0).toFixed(1) + "%";
+}
+
+document.getElementById("reset-btn").addEventListener("click", () => {
+  if (!confirm("Reset all progress? This can't be undone.")) return;
+  checked = {};
+  safeSet(KEYS.checked, checked);
+  render();
+});
+
+const addSectionTrigger = document.getElementById("add-section-trigger");
+const addSectionForm = document.getElementById("add-section-form");
+addSectionTrigger.addEventListener("click", () => {
+  addSectionForm.classList.toggle("open");
+  addSectionTrigger.style.display = addSectionForm.classList.contains("open") ? "none" : "block";
+});
+document.getElementById("cancel-section-btn").addEventListener("click", () => {
+  addSectionForm.classList.remove("open");
+  addSectionTrigger.style.display = "block";
+  document.getElementById("new-section-title").value = "";
+});
+document.getElementById("create-section-btn").addEventListener("click", () => {
+  const titleInput = document.getElementById("new-section-title");
+  const title = titleInput.value.trim();
+  if (!title){ titleInput.focus(); return; }
+  const id = "custom-" + Date.now();
+  customSections.push({ id, title });
+  const groupId = "g-" + (Date.now() + 1);
+  customGroups.push({ id: groupId, sectionId: id, title: "General", items: [] });
+  safeSet(KEYS.customSections, customSections);
+  safeSet(KEYS.customGroups, customGroups);
+  titleInput.value = "";
+  addSectionForm.classList.remove("open");
+  addSectionTrigger.style.display = "block";
+  render();
+});
+
+function buildExportPayload(){
+  return {
+    exportedAt: new Date().toISOString(),
+    checked, extraItems, customSections, customGroups, deadlines, collapsedGroups
+  };
+}
+
+function applyImportedPayload(data){
+  checked = data.checked || {};
+  extraItems = data.extraItems || {};
+  customSections = data.customSections || [];
+  customGroups = data.customGroups || [];
+  deadlines = data.deadlines || {};
+  collapsedGroups = data.collapsedGroups || {};
+  safeSet(KEYS.checked, checked);
+  safeSet(KEYS.extraItems, extraItems);
+  safeSet(KEYS.customSections, customSections);
+  safeSet(KEYS.customGroups, customGroups);
+  safeSet(KEYS.deadlines, deadlines);
+  safeSet(KEYS.collapsedGroups, collapsedGroups);
+}
+
+document.getElementById("export-btn").addEventListener("click", () => {
+  const payload = buildExportPayload();
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "progress.json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+const importInput = document.getElementById("import-file-input");
+document.getElementById("import-btn").addEventListener("click", () => importInput.click());
+importInput.addEventListener("change", () => {
+  const file = importInput.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const data = JSON.parse(reader.result);
+      applyImportedPayload(data);
+      render();
+      showBanner("Imported progress from file.");
+    }catch(e){
+      alert("That file doesn't look like a valid progress.json export.");
+    }
+  };
+  reader.readAsText(file);
+  importInput.value = "";
+});
+
+function showBanner(msg){
+  const b = document.getElementById("sync-banner");
+  b.textContent = msg;
+  b.classList.add("show");
+}
+
+async function tryAutoLoadPublished(){
+  const neverSavedLocally = localStorage.getItem(KEYS.checked) === null;
+  const isHosted = window.location.protocol === "http:" || window.location.protocol === "https:";
+  if (!neverSavedLocally || !isHosted) return;
+  try{
+    const res = await fetch("./progress.json", { cache: "no-store" });
+    if (!res.ok) return;
+    const data = await res.json();
+    applyImportedPayload(data);
+    showBanner("Loaded the published progress.json from this repo.");
+    render();
+  }catch(e){
+    // no progress.json alongside this page yet, or fetch blocked (e.g. local file://) - ignore
+  }
+}
+
+loadAll();
+render();
+tryAutoLoadPublished();
+</script>
+</body>
+</html>
