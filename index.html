@@ -478,7 +478,10 @@ function render(){
       const doneCount = g.items.filter((_, idx) => checked[gk + "::" + idx]).length;
       const total = g.items.length;
       const pct = total ? (doneCount/total*100) : 0;
-      const deadlineInfo = formatDeadline(deadlines[gk]);
+      const isComplete = total > 0 && doneCount === total;
+      const deadlineInfo = deadlines[gk]
+        ? (isComplete ? { text: "done \u2713", cls: "ok" } : formatDeadline(deadlines[gk]))
+        : null;
 
       const gHead = document.createElement("div");
       gHead.className = "group-head";
