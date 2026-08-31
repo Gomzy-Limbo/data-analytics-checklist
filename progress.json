@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-08-30T16:17:49.414Z",
+  "exportedAt": "2026-08-31T16:04:40.565Z",
   "checked": {
     "sql::joins::0": true,
     "sql::basics::5": true,
@@ -22,7 +22,7 @@
     "sql::functions::2": true,
     "sql::cte-window::0": true,
     "sql::cte-window::1": true,
-    "sql::projects::2": false,
+    "sql::projects::2": true,
     "python::fundamentals::1": false,
     "python::fundamentals::2": false,
     "python::fundamentals::4": false,
@@ -31,7 +31,7 @@
     "sql::advanced::0": true,
     "sql::advanced::1": true,
     "sql::projects::0": true,
-    "sql::projects::1": false
+    "sql::projects::1": true
   },
   "extraItems": {},
   "customSections": [],
@@ -70,6 +70,11 @@
     "azure::overview": true,
     "aws::viz-project": true,
     "aws::query-etl": true,
-    "databricks::overview": true
+    "databricks::overview": true,
+    "aws::setup-storage": true,
+    "git::fundamentals": true,
+    "git::repos": true,
+    "stats::core": true,
+    "jobready::prep": true
   }
 }
