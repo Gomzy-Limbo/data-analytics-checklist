@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-08-31T16:04:40.565Z",
+  "exportedAt": "2026-09-01T00:13:41.831Z",
   "checked": {
     "sql::joins::0": true,
     "sql::basics::5": true,
@@ -31,7 +31,14 @@
     "sql::advanced::0": true,
     "sql::advanced::1": true,
     "sql::projects::0": true,
-    "sql::projects::1": true
+    "sql::projects::1": true,
+    "python::fundamentals::0": false,
+    "python::fundamentals::3": false,
+    "python::fundamentals::5": false,
+    "python::fundamentals::6": false,
+    "git::repos::0": true,
+    "excel::fundamentals::0": true,
+    "excel::formulas::0": true
   },
   "extraItems": {},
   "customSections": [],
@@ -42,7 +49,11 @@
     "sql::functions": "2026-08-24",
     "sql::cte-window": "2026-08-24",
     "sql::advanced": "2026-08-24",
-    "sql::projects": "2026-08-26"
+    "sql::projects": "2026-08-26",
+    "excel::fundamentals": "2026-09-01",
+    "excel::formulas": "2026-09-02",
+    "excel::analysis": "2026-09-04",
+    "excel::projects": "2026-09-08"
   },
   "collapsedGroups": {
     "sql::joins": true,
