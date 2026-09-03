@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-09-01T00:13:41.831Z",
+  "exportedAt": "2026-09-03T00:36:15.208Z",
   "checked": {
     "sql::joins::0": true,
     "sql::basics::5": true,
@@ -38,7 +38,10 @@
     "python::fundamentals::6": false,
     "git::repos::0": true,
     "excel::fundamentals::0": true,
-    "excel::formulas::0": true
+    "excel::formulas::0": true,
+    "excel::formulas::1": true,
+    "excel::formulas::2": true,
+    "excel::formulas::3": true
   },
   "extraItems": {},
   "customSections": [],
@@ -51,7 +54,7 @@
     "sql::advanced": "2026-08-24",
     "sql::projects": "2026-08-26",
     "excel::fundamentals": "2026-09-01",
-    "excel::formulas": "2026-09-02",
+    "excel::formulas": "2026-09-03",
     "excel::analysis": "2026-09-04",
     "excel::projects": "2026-09-08"
   },
