@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-09-03T00:36:15.208Z",
+  "exportedAt": "2026-09-05T02:00:07.692Z",
   "checked": {
     "sql::joins::0": true,
     "sql::basics::5": true,
@@ -41,7 +41,9 @@
     "excel::formulas::0": true,
     "excel::formulas::1": true,
     "excel::formulas::2": true,
-    "excel::formulas::3": true
+    "excel::formulas::3": true,
+    "excel::formulas::4": true,
+    "excel::formulas::5": true
   },
   "extraItems": {},
   "customSections": [],
